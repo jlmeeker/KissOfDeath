@@ -22,15 +22,28 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
  */
 class KissOfDeathListener implements Listener {
 
+    KissOfDeath plugin;
+
+    public KissOfDeathListener(KissOfDeath plugin) {
+        this.plugin = plugin;
+        this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+    
     @EventHandler
     public void onEntityHit(EntityDamageByEntityEvent event) {
         Entity receiver = event.getEntity();
+        EntityType rtype = receiver.getType();
         Entity attacker = event.getDamager();
         String an;
         String rn;
         String item = "???";
         Random rand = new Random();
         int damage = event.getDamage();
+        
+        // Disallow this plugin to work against bosses
+        if (rtype == EntityType.ENDER_DRAGON || rtype == EntityType.WITHER) {
+            return;
+        }
 
         if (attacker.getType() == EntityType.PLAYER) {
             Player p = (Player) attacker;
@@ -43,15 +56,18 @@ class KissOfDeathListener implements Listener {
                 int lihM = li.getMaxHealth();
 
                 rn = receiver.getType().toString();
+                ;
                 // Caculate probability of one-shot kill
-                boolean oneshotkill = rand.nextInt(10) == 0;
+                int maxrand = this.plugin.getConfig().getInt("maxrand");
+                boolean oneshotkill = rand.nextInt(maxrand) == 0;
 
                 if (oneshotkill == true) {
                     event.setDamage(li.getHealth() + 10);
                     Location location;
                     location = p.getLocation();
                     p.getWorld().playSound(location, Sound.AMBIENCE_THUNDER, 1, 0);
-                    Bukkit.broadcastMessage(an + " dealt lethal blow to " + rn + " with a(n) " + item);
+                    String message = this.plugin.getConfig().getString("message");
+                    Bukkit.broadcastMessage(an + " " + message + " " + rn);
                     lih = 0;
                 }
                 

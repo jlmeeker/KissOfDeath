@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class KissOfDeath extends JavaPlugin {
 
     public void onEnable() {
-        Bukkit.getPluginManager().registerEvents(new KissOfDeathListener(), this);
+        this.saveDefaultConfig();
+        Bukkit.getPluginManager().registerEvents(new KissOfDeathListener(this), this);
     }
 }
