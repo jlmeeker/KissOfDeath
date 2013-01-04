@@ -26,7 +26,6 @@ class KissOfDeathListener implements Listener {
 
     public KissOfDeathListener(KissOfDeath plugin) {
         this.plugin = plugin;
-        this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
     @EventHandler
